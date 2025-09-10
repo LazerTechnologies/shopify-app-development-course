@@ -118,32 +118,43 @@ export default function Index() {
               <BlockStack gap="500">
                 <BlockStack gap="200">
                   <Text as="h2" variant="headingMd">
-                    Congrats on creating a new Shopify app 🎉
+                    FAQ Manager App 🎉
                   </Text>
                   <Text variant="bodyMd" as="p">
-                    This embedded app template uses{" "}
+                    This app helps you create and manage FAQs for your products using{" "}
                     <Link
-                      url="https://shopify.dev/docs/apps/tools/app-bridge"
+                      url="https://shopify.dev/docs/apps/build/custom-data/metaobjects"
                       target="_blank"
                       removeUnderline
                     >
-                      App Bridge
-                    </Link>{" "}
-                    interface examples like an{" "}
-                    <Link url="/app/additional" removeUnderline>
-                      additional page in the app nav
+                      Shopify Metaobjects
                     </Link>
-                    , as well as an{" "}
-                    <Link
-                      url="https://shopify.dev/docs/api/admin-graphql"
-                      target="_blank"
-                      removeUnderline
-                    >
-                      Admin GraphQL
-                    </Link>{" "}
-                    mutation demo, to provide a starting point for app
-                    development.
+                    . Create reusable FAQ entries and assign them to products easily.
                   </Text>
+                </BlockStack>
+                <BlockStack gap="200">
+                  <Text as="h3" variant="headingMd">
+                    Get started with FAQs
+                  </Text>
+                  <Text as="p" variant="bodyMd">
+                    Start by creating FAQ entries, then assign them to your products.
+                    Your FAQs will be stored as metaobjects and accessible via the
+                    Storefront API for theme integration.
+                  </Text>
+                  <InlineStack gap="300">
+                    <Button
+                      url="/app/faqs"
+                      variant="primary"
+                    >
+                      Manage FAQs
+                    </Button>
+                    <Button
+                      url="/app/products"
+                      variant="plain"
+                    >
+                      Assign FAQs to Products
+                    </Button>
+                  </InlineStack>
                 </BlockStack>
                 <BlockStack gap="200">
                   <Text as="h3" variant="headingMd">
@@ -291,29 +302,29 @@ export default function Index() {
               <Card>
                 <BlockStack gap="200">
                   <Text as="h2" variant="headingMd">
-                    Next steps
+                    How to use FAQ Manager
                   </Text>
                   <List>
                     <List.Item>
-                      Build an{" "}
-                      <Link
-                        url="https://shopify.dev/docs/apps/getting-started/build-app-example"
-                        target="_blank"
-                        removeUnderline
-                      >
-                        {" "}
-                        example app
+                      <Link url="/app/faqs" removeUnderline>
+                        Create FAQ entries
                       </Link>{" "}
-                      to get started
+                      with questions and answers
                     </List.Item>
                     <List.Item>
-                      Explore Shopify’s API with{" "}
+                      <Link url="/app/products" removeUnderline>
+                        Assign FAQs to products
+                      </Link>{" "}
+                      by selecting from your FAQ library
+                    </List.Item>
+                    <List.Item>
+                      Access FAQ data in your theme using{" "}
                       <Link
-                        url="https://shopify.dev/docs/apps/tools/graphiql-admin-api"
+                        url="https://shopify.dev/docs/api/liquid/objects/metaobject"
                         target="_blank"
                         removeUnderline
                       >
-                        GraphiQL
+                        Liquid metaobject tags
                       </Link>
                     </List.Item>
                   </List>
