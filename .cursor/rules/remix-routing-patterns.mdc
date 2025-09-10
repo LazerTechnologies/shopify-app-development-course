@@ -1,0 +1,53 @@
+---
+globs: app/routes/**/*
+---
+
+# Remix Routing Patterns for Shopify Apps
+
+## File Structure Conventions
+- **Public Routes**: `app/routes/_index/` - Landing page for unauthenticated users
+- **App Routes**: `app/routes/app.*` - Protected routes inside Shopify Admin
+- **Auth Routes**: `app/routes/auth.*` - Authentication flow routes
+- **Webhook Routes**: `app/routes/webhooks.*` - Shopify webhook handlers
+
+## Route Examples
+```
+app/routes/
+├── _index/               # Public landing page
+├── app.jsx              # Layout for authenticated app routes
+├── app._index.jsx       # Main app dashboard
+├── app.additional.jsx   # Additional app page
+├── auth.login/          # Login page
+└── webhooks.*.jsx       # Webhook endpoints
+```
+
+## Route Patterns
+1. **Nested Routes**: Use dot notation (e.g., `app.settings.jsx`)
+2. **Layout Routes**: Files without underscore provide layout for nested routes
+3. **Index Routes**: `_index.jsx` files serve as default route for their directory
+4. **Dynamic Routes**: Use `$` for parameters (e.g., `products.$id.jsx`)
+
+## Key Route Requirements
+- **Authentication**: All `app.*` routes must authenticate via [shopify.server.js](mdc:app/shopify.server.js)
+- **Error Boundaries**: Include ErrorBoundary exports for Shopify compatibility
+- **Headers**: Export headers function for Shopify boundary handling
+- **Loaders**: Always await `authenticate.admin(request)` in app route loaders
+
+## Route Template
+```jsx
+import { authenticate } from "../shopify.server";
+import { boundary } from "@shopify/shopify-app-remix/server";
+
+export const loader = async ({ request }) => {
+  await authenticate.admin(request);
+  return {};
+};
+
+export function ErrorBoundary() {
+  return boundary.error(useRouteError());
+}
+
+export const headers = (headersArgs) => {
+  return boundary.headers(headersArgs);
+};
+```

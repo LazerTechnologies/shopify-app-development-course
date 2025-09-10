@@ -1,0 +1,69 @@
+---
+description: Development workflow and best practices
+---
+
+# Development Workflow
+
+## Getting Started
+1. **Install dependencies**: `npm install`
+2. **Setup database**: `npx prisma migrate dev`
+3. **Start development**: `npm run dev`
+4. **Open in browser**: App URL from Shopify CLI output
+
+## Development Commands
+```bash
+# Primary development
+npm run dev              # Start app with Shopify CLI
+npm run build           # Build for production
+npm run start           # Start production server
+
+# Database operations
+npx prisma studio       # Visual database editor
+npx prisma migrate dev  # Create and apply migration
+npx prisma generate     # Regenerate Prisma client
+
+# Code quality
+npm run lint           # Run ESLint
+npx prettier --write . # Format code
+```
+
+## Project Structure
+```
+first-ever-app/
+├── app/                     # Remix application
+│   ├── routes/             # File-based routing
+│   ├── shopify.server.js   # Shopify configuration
+│   ├── db.server.js        # Database client
+│   └── root.jsx            # App shell
+├── prisma/                 # Database schema and migrations
+├── extensions/             # Shopify extensions (if any)
+├── shopify.app.toml       # App configuration
+└── package.json           # Dependencies and scripts
+```
+
+## Development Flow
+1. **Make changes**: Edit files in `app/` directory
+2. **Hot reload**: Vite automatically reloads on changes
+3. **Test in Shopify**: Use development store for testing
+4. **Database changes**: Create migrations for schema updates
+5. **Deploy**: Use `npm run deploy` for Partner Dashboard
+
+## Environment Setup
+Create `.env` file with:
+```
+SHOPIFY_API_KEY=your_api_key
+SHOPIFY_API_SECRET=your_secret_key
+SHOPIFY_APP_URL=your_tunnel_url
+SCOPES=write_products
+```
+
+## Testing
+- Use Shopify development store for testing
+- Test OAuth flow from scratch regularly
+- Verify webhook endpoints receive data correctly
+- Test app installation/uninstallation flow
+
+## Deployment
+1. **Build**: `npm run build`
+2. **Deploy**: `npm run deploy` (to Partners Dashboard)
+3. **Release**: Submit for app store review (if public app)

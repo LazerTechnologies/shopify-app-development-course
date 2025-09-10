@@ -1,0 +1,42 @@
+---
+alwaysApply: true
+---
+
+# Shopify App Architecture Guide
+
+This is a Shopify embedded app built with Remix, following Shopify's app development patterns.
+
+## Core Technologies
+- **Framework**: Remix (React-based full-stack framework)
+- **UI Library**: Shopify Polaris for consistent Shopify design
+- **Authentication**: Shopify App Bridge with OAuth
+- **Database**: SQLite with Prisma ORM
+- **API**: Shopify Admin GraphQL API (v2025-01)
+- **Build Tool**: Vite
+- **TypeScript**: Enabled for type safety
+
+## Key Files
+- [shopify.server.js](mdc:app/shopify.server.js): Main Shopify app configuration
+- [shopify.app.toml](mdc:shopify.app.toml): App manifest and configuration
+- [package.json](mdc:package.json): Dependencies and scripts
+- [prisma/schema.prisma](mdc:prisma/schema.prisma): Database schema
+
+## Architecture Patterns
+1. **Embedded App**: Runs inside Shopify Admin using App Bridge
+2. **Server-side Authentication**: All API calls authenticated server-side
+3. **GraphQL First**: Use Shopify Admin GraphQL API for all operations
+4. **Session Management**: Prisma-based session storage
+5. **File-based Routing**: Remix file-based routing in `app/routes/`
+
+## Environment Variables
+- `SHOPIFY_API_KEY`: App's public API key
+- `SHOPIFY_API_SECRET`: App's secret key (never expose)
+- `SHOPIFY_APP_URL`: App's public URL
+- `SCOPES`: Comma-separated list of required permissions
+
+## Development Commands
+- `npm run dev`: Start development server with Shopify CLI
+- `npm run build`: Build for production
+- `npm run deploy`: Deploy to Shopify Partners
+- `npx prisma studio`: Open database admin UI
+- `npx prisma migrate dev`: Apply database migrations

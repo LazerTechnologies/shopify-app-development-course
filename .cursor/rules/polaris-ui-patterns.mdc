@@ -1,0 +1,103 @@
+---
+globs: app/routes/app.*
+---
+
+# Shopify Polaris UI Patterns
+
+## Required Setup
+Always import Polaris styles in app routes via [app.jsx](mdc:app/routes/app.jsx):
+```jsx
+import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
+export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
+```
+
+## App Bridge Integration
+Use `AppProvider` to wrap your app content:
+```jsx
+import { AppProvider } from "@shopify/shopify-app-remix/react";
+import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
+
+export default function App() {
+  return (
+    <AppProvider isEmbeddedApp apiKey={apiKey}>
+      <TitleBar title="My App">
+        <button onClick={handleAction}>Primary Action</button>
+      </TitleBar>
+      {/* Your content */}
+    </AppProvider>
+  );
+}
+```
+
+## Common Polaris Components
+
+### Page Layout
+```jsx
+import { Page, Layout, Card, BlockStack } from "@shopify/polaris";
+
+<Page>
+  <Layout>
+    <Layout.Section>
+      <Card>
+        <BlockStack gap="400">
+          {/* Content */}
+        </BlockStack>
+      </Card>
+    </Layout.Section>
+  </Layout>
+</Page>
+```
+
+### Forms and Actions
+```jsx
+import { Button, TextField, FormLayout } from "@shopify/polaris";
+
+<FormLayout>
+  <TextField
+    label="Product Title"
+    value={title}
+    onChange={setTitle}
+  />
+  <Button
+    primary
+    onClick={handleSubmit}
+    loading={isLoading}
+  >
+    Save Product
+  </Button>
+</FormLayout>
+```
+
+### Data Display
+```jsx
+import { DataTable, IndexTable } from "@shopify/polaris";
+
+// For simple tabular data
+<DataTable
+  columnContentTypes={['text', 'numeric', 'text']}
+  headings={['Product', 'Price', 'Status']}
+  rows={tableData}
+/>
+
+// For interactive lists
+<IndexTable
+  resourceName={{singular: 'product', plural: 'products'}}
+  itemCount={products.length}
+  headings={[{title: 'Product'}, {title: 'Status'}]}
+>
+  {/* Table rows */}
+</IndexTable>
+```
+
+## Design Patterns
+1. **Consistent Spacing**: Use Polaris spacing tokens (`gap="400"`)
+2. **Semantic Colors**: Use Polaris color system (`tone="critical"`)
+3. **Responsive Layout**: Use Layout components for proper responsive behavior
+4. **Loading States**: Always show loading indicators during async operations
+5. **Error Handling**: Use Banner component for error messages
+
+## App Bridge Features
+- **Navigation**: Use `<Link>` for internal navigation
+- **Toasts**: `shopify.toast.show("Message")` for notifications
+- **Modals**: Use App Bridge modals for complex interactions
+- **External Links**: Use `target="_blank"` for external Shopify admin links

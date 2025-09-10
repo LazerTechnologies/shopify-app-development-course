@@ -1,0 +1,100 @@
+---
+globs: app/routes/app.*
+---
+
+# Shopify GraphQL Patterns
+
+## API Version
+Current API version: **2025-01** (defined in [shopify.server.js](mdc:app/shopify.server.js))
+
+## GraphQL Request Pattern
+```jsx
+export const action = async ({ request }) => {
+  const { admin } = await authenticate.admin(request);
+
+  const response = await admin.graphql(`
+    #graphql
+    mutation productCreate($product: ProductCreateInput!) {
+      productCreate(product: $product) {
+        product {
+          id
+          title
+          handle
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `, {
+    variables: {
+      product: {
+        title: "My Product"
+      }
+    }
+  });
+
+  const data = await response.json();
+  return data;
+};
+```
+
+## Common Patterns
+1. **Always use `#graphql` comment**: Enables syntax highlighting and validation
+2. **Include `userErrors`**: Always check for validation errors in mutations
+3. **Use Variables**: Never interpolate values directly into GraphQL strings
+4. **Handle Pagination**: Use `edges/nodes` pattern for lists
+5. **Request Minimal Data**: Only query fields you actually need
+
+## Example Queries
+
+### Product Operations
+```graphql
+# Create Product
+mutation productCreate($product: ProductCreateInput!) {
+  productCreate(product: $product) {
+    product { id title }
+    userErrors { field message }
+  }
+}
+
+# Get Products
+query getProducts($first: Int!) {
+  products(first: $first) {
+    edges {
+      node {
+        id
+        title
+        handle
+        status
+      }
+    }
+  }
+}
+```
+
+### Shop Information
+```graphql
+query getShop {
+  shop {
+    name
+    domain
+    plan {
+      displayName
+    }
+  }
+}
+```
+
+## Error Handling
+- Always check `userErrors` in mutation responses
+- Handle network errors with try/catch
+- Use Shopify's error boundary pattern for route-level errors
+- Log GraphQL errors for debugging
+
+## Performance Tips
+- Use pagination for large datasets
+- Request only needed fields
+- Batch operations when possible
+- Cache static data appropriately

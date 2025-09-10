@@ -1,0 +1,60 @@
+---
+globs: app/routes/app.*,app/routes/auth.*,app/shopify.server.js
+---
+
+# Shopify Authentication Patterns
+
+## Authentication Flow
+1. **Login**: Users enter shop domain on public page
+2. **OAuth**: Shopify redirects to auth endpoint with authorization code
+3. **Token Exchange**: Server exchanges code for access token
+4. **Session Storage**: Token stored in Prisma database
+5. **App Access**: Authenticated requests use stored session
+
+## Key Authentication Functions
+From [shopify.server.js](mdc:app/shopify.server.js):
+- `authenticate.admin(request)`: Authenticate admin API requests
+- `authenticate.webhook(request)`: Authenticate webhook requests
+- `login`: Handle OAuth login flow
+- `sessionStorage`: Prisma-based session management
+
+## Protected Route Pattern
+```jsx
+export const loader = async ({ request }) => {
+  // This line authenticates the request and ensures valid session
+  await authenticate.admin(request);
+
+  // Your route logic here
+  return {};
+};
+```
+
+## GraphQL API Authentication
+```jsx
+export const action = async ({ request }) => {
+  // Get authenticated admin client
+  const { admin } = await authenticate.admin(request);
+
+  // Make GraphQL request with automatic authentication
+  const response = await admin.graphql(`
+    query {
+      shop {
+        name
+      }
+    }
+  `);
+
+  return await response.json();
+};
+```
+
+## Session Requirements
+- Sessions stored in [Session model](mdc:prisma/schema.prisma)
+- Contains shop domain, access token, user info, and permissions
+- Automatically managed by `@shopify/shopify-app-session-storage-prisma`
+
+## Security Best Practices
+- Never expose `SHOPIFY_API_SECRET` to client-side code
+- Always validate webhook authenticity using `authenticate.webhook()`
+- Use HTTPS in production (configured in [shopify.app.toml](mdc:shopify.app.toml))
+- Session tokens are automatically rotated by Shopify

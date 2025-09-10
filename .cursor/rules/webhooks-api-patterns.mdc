@@ -1,0 +1,85 @@
+---
+globs: app/routes/webhooks.*
+---
+
+# Webhooks and API Patterns
+
+## Webhook Configuration
+Webhooks are configured in [shopify.app.toml](mdc:shopify.app.toml):
+```toml
+[[webhooks.subscriptions]]
+topics = [ "app/uninstalled" ]
+uri = "/webhooks/app/uninstalled"
+
+[[webhooks.subscriptions]]
+topics = [ "app/scopes_update" ]
+uri = "/webhooks/app/scopes_update"
+```
+
+## Webhook Route Pattern
+```jsx
+import { authenticate } from "../shopify.server";
+
+export const action = async ({ request }) => {
+  // Authenticate webhook request
+  const { topic, shop, session } = await authenticate.webhook(request);
+
+  // Handle webhook based on topic
+  switch (topic) {
+    case "APP_UNINSTALLED":
+      // Clean up app data
+      await handleAppUninstall(shop);
+      break;
+    default:
+      console.log(`Unhandled webhook topic: ${topic}`);
+  }
+
+  return new Response("OK", { status: 200 });
+};
+```
+
+## Common Webhook Topics
+- `app/uninstalled`: App is uninstalled from shop
+- `orders/create`: New order created
+- `products/create`: New product created
+- `customers/create`: New customer created
+- `app/scopes_update`: App permissions changed
+
+## API Response Patterns
+
+### Success Response
+```jsx
+return json({
+  success: true,
+  data: result,
+  message: "Operation completed successfully"
+});
+```
+
+### Error Response
+```jsx
+return json({
+  success: false,
+  error: "Validation failed",
+  details: errors
+}, { status: 400 });
+```
+
+### Redirect Response
+```jsx
+return redirect("/app/success");
+```
+
+## Request Handling
+1. **Always authenticate**: Use appropriate authenticate method
+2. **Validate input**: Check request body and parameters
+3. **Handle errors**: Use try/catch for async operations
+4. **Return proper status**: Use appropriate HTTP status codes
+5. **Log important events**: Log webhook events and errors
+
+## Security Best Practices
+- Webhook authenticity is verified by `authenticate.webhook()`
+- Never expose sensitive data in client-side code
+- Validate all input from external sources
+- Use HTTPS for all webhook URLs
+- Rate limit webhook endpoints if necessary

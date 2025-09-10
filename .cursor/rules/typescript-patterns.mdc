@@ -1,0 +1,78 @@
+---
+globs: *.ts,*.tsx,*.js,*.jsx
+---
+
+# TypeScript/JavaScript Patterns
+
+## File Extensions
+- **TypeScript**: Use `.ts` for utilities, `.tsx` for React components
+- **JavaScript**: Use `.js` for config files, `.jsx` for React components
+- **Mixed**: Project supports both TS and JS (configured in [tsconfig.json](mdc:tsconfig.json))
+
+## Import Patterns
+```jsx
+// Remix imports
+import { json, redirect } from "@remix-run/node";
+import { useLoaderData, useFetcher } from "@remix-run/react";
+
+// Shopify imports
+import { authenticate } from "../shopify.server";
+import { AppProvider } from "@shopify/shopify-app-remix/react";
+import { Page, Card, Button } from "@shopify/polaris";
+import { TitleBar } from "@shopify/app-bridge-react";
+
+// Relative imports
+import prisma from "../db.server";
+```
+
+## Type Safety
+1. **Loader Data**: Type your loader return values
+2. **Action Data**: Type form submission data
+3. **GraphQL**: Use generated types for GraphQL responses
+4. **Props**: Type component props when using TypeScript
+
+## Common Patterns
+
+### Route Loader/Action Types
+```typescript
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await authenticate.admin(request);
+  return json({ data: [] });
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const { admin } = await authenticate.admin(request);
+  // Handle form submission
+  return json({ success: true });
+};
+```
+
+### Component Props
+```typescript
+interface ProductCardProps {
+  product: {
+    id: string;
+    title: string;
+    price: string;
+  };
+  onEdit: (id: string) => void;
+}
+
+export function ProductCard({ product, onEdit }: ProductCardProps) {
+  // Component implementation
+}
+```
+
+## ESM Configuration
+- **Type**: "module" in [package.json](mdc:package.json)
+- **Imports**: Use ESM import/export syntax
+- **File Extensions**: Include `.js` extension for local imports when needed
+- **Node APIs**: Import from `node:` prefixed modules
+
+## Code Style
+- **Semicolons**: Optional (Prettier handles formatting)
+- **Quotes**: Double quotes for JSX attributes, single for JS strings
+- **Async/Await**: Prefer over Promises for async operations
+- **Arrow Functions**: Use for event handlers and short functions
