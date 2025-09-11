@@ -25,3 +25,8 @@ scopes = "write_products,read_metaobjects,write_metaobjects,write_metaobject_def
 
 [auth]
 redirect_urls = [ "https://example.com/api/auth" ]
+
+[app_proxy]
+url = "/apps/raffle-discount"
+subpath = "raffle"
+prefix = "apps"

@@ -1,0 +1,498 @@
+<!-- Raffle Modal App Embed Block -->
+<!-- This creates a floating chat bubble that stays at bottom-right corner -->
+
+<div
+  id="raffle-modal-container-{{ block.id }}"
+  class="raffle-modal-container"
+  {{ block.shopify_attributes }}
+>
+  <!-- Floating Chat Bubble -->
+  <div id="raffle-bubble-{{ block.id }}" class="raffle-bubble">
+    <div class="raffle-bubble-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L13.09 6.26L18 7L13.09 7.74L12 12L10.91 7.74L6 7L10.91 6.26L12 2Z" fill="currentColor"/>
+        <path d="M19 15L20.09 17.26L23 18L20.09 18.74L19 21L17.91 18.74L15 18L17.91 17.26L19 15Z" fill="currentColor"/>
+        <path d="M5 9L6.09 11.26L9 12L6.09 12.74L5 15L3.91 12.74L1 12L3.91 11.26L5 9Z" fill="currentColor"/>
+      </svg>
+      <span class="raffle-bubble-text">{{ block.settings.bubble_text }}</span>
+    </div>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div id="raffle-modal-{{ block.id }}" class="raffle-modal-overlay" style="display: none;">
+    <div class="raffle-modal">
+      <!-- Modal Header -->
+      <div class="raffle-modal-header">
+        <h3 class="raffle-modal-title">{{ block.settings.modal_title }}</h3>
+        <button class="raffle-modal-close" type="button" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="raffle-modal-content">
+        <div id="raffle-initial-content-{{ block.id }}" class="raffle-content-section">
+          <div class="raffle-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L13.09 6.26L18 7L13.09 7.74L12 12L10.91 7.74L6 7L10.91 6.26L12 2Z" fill="currentColor"/>
+              <path d="M19 15L20.09 17.26L23 18L20.09 18.74L19 21L17.91 18.74L15 18L17.91 17.26L19 15Z" fill="currentColor"/>
+              <path d="M5 9L6.09 11.26L9 12L6.09 12.74L5 15L3.91 12.74L1 12L3.91 11.26L5 9Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <p class="raffle-description">{{ block.settings.modal_description }}</p>
+          <button id="raffle-try-luck-btn-{{ block.id }}" class="raffle-try-luck-btn" type="button">
+            <span class="btn-text">{{ block.settings.button_text }}</span>
+            <span class="btn-loading" style="display: none;">
+              <svg class="loading-spinner" width="20" height="20" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                  <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                  <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                </circle>
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <div id="raffle-success-content-{{ block.id }}" class="raffle-content-section" style="display: none;">
+          <div class="raffle-success-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" fill="#10B981"/>
+              <path d="M9 12L11 14L15 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h4 class="raffle-success-title">Congratulations!</h4>
+          <p class="raffle-success-message">You won <span id="raffle-discount-amount-{{ block.id }}" class="discount-highlight">0%</span> off your order!</p>
+          <p class="raffle-success-note">{{ block.settings.success_note }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .raffle-modal-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Floating Bubble - Liquid Glass Style */
+  .raffle-bubble {
+    position: relative;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    user-select: none;
+    max-width: 200px;
+  }
+
+  .raffle-bubble:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(31, 38, 135, 0.45);
+  }
+
+  .raffle-bubble-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .raffle-bubble-text {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* Modal Overlay */
+  .raffle-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .raffle-modal-overlay.show {
+    opacity: 1;
+  }
+
+  /* Modal - Liquid Glass Style */
+  .raffle-modal {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    max-width: 400px;
+    width: 90vw;
+    max-height: 80vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(31, 38, 135, 0.3);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+  }
+
+  .raffle-modal-overlay.show .raffle-modal {
+    transform: scale(1);
+  }
+
+  .raffle-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .raffle-modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .raffle-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    color: rgba(0, 0, 0, 0.6);
+    transition: all 0.2s ease;
+  }
+
+  .raffle-modal-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .raffle-modal-content {
+    padding: 24px;
+  }
+
+  .raffle-content-section {
+    text-align: center;
+  }
+
+  .raffle-icon, .raffle-success-icon {
+    margin: 0 auto 16px;
+    color: #3B82F6;
+  }
+
+  .raffle-description {
+    font-size: 16px;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.7);
+    margin: 0 0 24px;
+  }
+
+  /* Try Luck Button - Liquid Glass Style */
+  .raffle-try-luck-btn {
+    background: rgba(59, 130, 246, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .raffle-try-luck-btn:hover:not(:disabled) {
+    background: rgba(59, 130, 246, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  }
+
+  .raffle-try-luck-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .btn-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loading-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Success Content */
+  .raffle-success-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #10B981;
+    margin: 0 0 12px;
+  }
+
+  .raffle-success-message {
+    font-size: 16px;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.8);
+    margin: 0 0 16px;
+  }
+
+  .discount-highlight {
+    font-weight: 700;
+    color: #DC2626;
+    font-size: 18px;
+  }
+
+  .raffle-success-note {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0;
+  }
+
+  /* Mobile Adaptations */
+  @media (max-width: 768px) {
+    .raffle-modal-container {
+      bottom: 16px;
+      right: 16px;
+    }
+
+    .raffle-bubble {
+      padding: 10px 16px;
+      max-width: 160px;
+    }
+
+    .raffle-bubble-text {
+      font-size: 13px;
+    }
+
+    .raffle-modal {
+      width: 95vw;
+      max-width: none;
+      margin: 16px;
+    }
+
+    .raffle-modal-title {
+      font-size: 18px;
+    }
+
+    .raffle-modal-content {
+      padding: 20px;
+    }
+  }
+
+  /* Hide on very small screens */
+  @media (max-width: 480px) {
+    .raffle-bubble-text {
+      display: none;
+    }
+
+    .raffle-bubble {
+      width: 48px;
+      height: 48px;
+      padding: 12px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const blockId = '{{ block.id }}';
+    const shopDomain = '{{ shop.permanent_domain }}';
+
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initRaffleModal);
+    } else {
+      initRaffleModal();
+    }
+
+    function initRaffleModal() {
+      const bubble = document.getElementById(`raffle-bubble-${blockId}`);
+      const modal = document.getElementById(`raffle-modal-${blockId}`);
+      const closeBtn = modal?.querySelector('.raffle-modal-close');
+      const tryLuckBtn = document.getElementById(`raffle-try-luck-btn-${blockId}`);
+      const initialContent = document.getElementById(`raffle-initial-content-${blockId}`);
+      const successContent = document.getElementById(`raffle-success-content-${blockId}`);
+      const discountAmountSpan = document.getElementById(`raffle-discount-amount-${blockId}`);
+
+      if (!bubble || !modal) return;
+
+      // Open modal when bubble is clicked
+      bubble.addEventListener('click', openModal);
+
+      // Close modal events
+      closeBtn?.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+      });
+
+      // ESC key to close modal
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display !== 'none') {
+          closeModal();
+        }
+      });
+
+      // Try luck button
+      tryLuckBtn?.addEventListener('click', tryLuck);
+
+      function openModal() {
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.remove('show');
+        setTimeout(() => {
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }, 300);
+      }
+
+      async function tryLuck() {
+        if (!tryLuckBtn) return;
+
+        // Disable button and show loading
+        tryLuckBtn.disabled = true;
+        tryLuckBtn.querySelector('.btn-text').style.display = 'none';
+        tryLuckBtn.querySelector('.btn-loading').style.display = 'flex';
+
+        try {
+          // Make request to app proxy
+          const response = await fetch(`https://${shopDomain}/apps/raffle`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          const data = await response.json();
+
+          if (data.success && data.discount) {
+            // Set cart attribute immediately
+            await setCartAttribute('raffle_discount_amount', data.discount.toString());
+
+            // Show success content
+            if (discountAmountSpan) {
+              discountAmountSpan.textContent = `${data.discount}%`;
+            }
+
+            // Switch to success view
+            if (initialContent) initialContent.style.display = 'none';
+            if (successContent) successContent.style.display = 'block';
+
+          } else {
+            // Silent failure as requested - just reset button
+            resetButton();
+          }
+        } catch (error) {
+          // Silent failure as requested - just reset button
+          console.error('Raffle request failed:', error);
+          resetButton();
+        }
+
+        function resetButton() {
+          tryLuckBtn.disabled = false;
+          tryLuckBtn.querySelector('.btn-text').style.display = 'inline';
+          tryLuckBtn.querySelector('.btn-loading').style.display = 'none';
+        }
+      }
+
+      async function setCartAttribute(key, value) {
+        try {
+          // Use Shopify's cart API to set the attribute
+          const response = await fetch('/cart/update.json', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              attributes: {
+                [key]: value
+              }
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to update cart');
+          }
+
+          return await response.json();
+        } catch (error) {
+          console.error('Failed to set cart attribute:', error);
+          throw error;
+        }
+      }
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Raffle Discount",
+  "target": "body",
+  "settings": [
+    {
+      "type": "text",
+      "id": "bubble_text",
+      "label": "Bubble Text",
+      "default": "Try Your Luck!"
+    },
+    {
+      "type": "text",
+      "id": "modal_title",
+      "label": "Modal Title",
+      "default": "Lucky Discount Raffle"
+    },
+    {
+      "type": "textarea",
+      "id": "modal_description",
+      "label": "Modal Description",
+      "default": "Feeling lucky? Click the button below and you might get a discount between 5-10% off your order!"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Try My Luck!"
+    },
+    {
+      "type": "textarea",
+      "id": "success_note",
+      "label": "Success Note",
+      "default": "The discount has been applied to your cart!"
+    }
+  ]
+}
+{% endschema %}
