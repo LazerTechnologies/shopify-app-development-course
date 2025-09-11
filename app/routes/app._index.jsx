@@ -14,9 +14,18 @@ import {
 } from "@shopify/polaris";
 import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
+import { ensureOrderMetafieldDefinitions } from "../services/metafield.server";
 
 export const loader = async ({ request }) => {
-  await authenticate.admin(request);
+  const { admin } = await authenticate.admin(request);
+
+  // Ensure Order metafield definitions exist
+  try {
+    await ensureOrderMetafieldDefinitions(admin);
+  } catch (error) {
+    // Log silently as requested, don't break the dashboard
+    console.error("Failed to ensure Order metafield definitions:", error);
+  }
 
   return null;
 };
