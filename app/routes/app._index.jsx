@@ -15,6 +15,7 @@ import {
 import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { ensureOrderMetafieldDefinitions } from "../services/metafield.server";
+import { ensureRaffleDiscountFunction } from "../services/discount.server";
 
 export const loader = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
@@ -25,6 +26,14 @@ export const loader = async ({ request }) => {
   } catch (error) {
     // Log silently as requested, don't break the dashboard
     console.error("Failed to ensure Order metafield definitions:", error);
+  }
+
+  // Register raffle discount function if not already registered
+  try {
+    await ensureRaffleDiscountFunction(admin);
+  } catch (error) {
+    // Log silently as requested, don't break the dashboard
+    console.error("Failed to ensure raffle discount function registration:", error);
   }
 
   return null;
