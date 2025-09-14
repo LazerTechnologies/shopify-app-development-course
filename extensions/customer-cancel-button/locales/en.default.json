@@ -1,0 +1,5 @@
+{
+  "order.cancel": "Cancel Order",
+  "order.cancelled.success": "Order cancelled successfully",
+  "order.cancelled.error": "Failed to cancel order"
+}
