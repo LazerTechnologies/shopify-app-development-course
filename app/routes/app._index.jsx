@@ -130,6 +130,50 @@ export default function Index() {
         </button>
       </TitleBar>
       <BlockStack gap="500">
+        {/* Quick Actions */}
+        <Layout>
+          <Layout.Section variant="oneThird">
+            <Card>
+              <BlockStack gap="300">
+                <Text as="h2" variant="headingMd">
+                  🎨 Checkout Branding
+                </Text>
+                <Text as="p" variant="bodyMd">
+                  Upload custom fonts to personalize your checkout experience
+                </Text>
+                <InlineStack gap="200">
+                  <Button
+                    url="/app/branding"
+                    variant="primary"
+                  >
+                    Customize Checkout
+                  </Button>
+                </InlineStack>
+              </BlockStack>
+            </Card>
+          </Layout.Section>
+          <Layout.Section variant="oneThird">
+            <Card>
+              <BlockStack gap="300">
+                <Text as="h2" variant="headingMd">
+                  ❓ FAQ Management
+                </Text>
+                <Text as="p" variant="bodyMd">
+                  Manage questions and answers for your products
+                </Text>
+                <InlineStack gap="200">
+                  <Button
+                    url="/app/faqs"
+                    variant="primary"
+                  >
+                    Manage FAQs
+                  </Button>
+                </InlineStack>
+              </BlockStack>
+            </Card>
+          </Layout.Section>
+        </Layout>
+
         <Layout>
           <Layout.Section>
             <Card>
@@ -159,20 +203,20 @@ export default function Index() {
                     Your FAQs will be stored as metaobjects and accessible via the
                     Storefront API for theme integration.
                   </Text>
-                  <InlineStack gap="300">
-                    <Button
-                      url="/app/faqs"
-                      variant="primary"
-                    >
-                      Manage FAQs
-                    </Button>
-                    <Button
-                      url="/app/products"
-                      variant="plain"
-                    >
-                      Assign FAQs to Products
-                    </Button>
-                  </InlineStack>
+                <InlineStack gap="300">
+                  <Button
+                    url="/app/faqs"
+                    variant="primary"
+                  >
+                    Manage FAQs
+                  </Button>
+                  <Button
+                    url="/app/products"
+                    variant="plain"
+                  >
+                    Assign FAQs to Products
+                  </Button>
+                </InlineStack>
                 </BlockStack>
                 <BlockStack gap="200">
                   <Text as="h3" variant="headingMd">
