@@ -136,6 +136,26 @@ export default function Index() {
             <Card>
               <BlockStack gap="300">
                 <Text as="h2" variant="headingMd">
+                  📊 Analytics Pixel
+                </Text>
+                <Text as="p" variant="bodyMd">
+                  Manage your web pixel to track customer events and analytics
+                </Text>
+                <InlineStack gap="200">
+                  <Button
+                    url="/app/analytics"
+                    variant="primary"
+                  >
+                    Manage Pixel
+                  </Button>
+                </InlineStack>
+              </BlockStack>
+            </Card>
+          </Layout.Section>
+          <Layout.Section variant="oneThird">
+            <Card>
+              <BlockStack gap="300">
+                <Text as="h2" variant="headingMd">
                   🎨 Checkout Branding
                 </Text>
                 <Text as="p" variant="bodyMd">
